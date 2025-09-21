@@ -15,10 +15,7 @@
       margin: 0;
       transition: background 0.3s, color 0.3s;
     }
-    body.dark {
-      background: #1e1e1e;
-      color: #ddd;
-    }
+    body.dark { background: #1e1e1e; color: #ddd; }
     .container {
       background: white;
       padding: 30px 40px;
@@ -83,7 +80,7 @@
   <div class="container">
     <div class="top-controls">
       <h2>📝 Firebase To-Do List</h2>
-      <button class="dark-toggle" onclick="toggleDarkMode()">🌙</button>
+      <button id="darkModeBtn" class="dark-toggle">🌙</button>
     </div>
     <div>
       <input type="text" id="taskInput" placeholder="Enter a task..." />
@@ -94,7 +91,7 @@
         <option value="Urgent">Urgent</option>
       </select>
       <input type="date" id="deadline" />
-      <button onclick="addTask()">Add</button>
+      <button id="addTaskBtn">Add</button>
     </div>
     <ul id="taskList"></ul>
   </div>
@@ -104,51 +101,56 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
   <script>
-   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyCc-vr43NFOuE2R3Jysy-FWCIYCiXok32A",
-  authDomain: "to-do-app-bfbfb.firebaseapp.com",
-  projectId: "to-do-app-bfbfb",
-  storageBucket: "to-do-app-bfbfb.firebasestorage.app",
-  messagingSenderId: "211254739364",
-  appId: "1:211254739364:web:ce216a907a8625bd440131",
-  measurementId: "G-4218SRLN53"
-};
+    // 🚨 Replace with your Firebase config from console
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "SENDER_ID",
+      appId: "APP_ID"
     };
 
-    // Initialize Firebase
+    // Init Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
     let tasks = [];
 
+    // Add a task
     async function addTask() {
       const input = document.getElementById("taskInput");
-      const category = document.getElementById("category").value;
-      const deadline = document.getElementById("deadline").value;
       const taskText = input.value.trim();
       if (taskText === "") return;
 
-      await db.collection("tasks").add({
-        text: taskText,
-        category,
-        deadline,
-        completed: false,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
+      try {
+        await db.collection("tasks").add({
+          text: taskText,
+          category: document.getElementById("category").value,
+          deadline: document.getElementById("deadline").value,
+          completed: false,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        console.log("✅ Task added:", taskText);
+      } catch (err) {
+        console.error("❌ Error adding task:", err);
+      }
 
       input.value = "";
       document.getElementById("deadline").value = "";
     }
 
+    // Toggle completion
     async function toggleComplete(id, completed) {
       await db.collection("tasks").doc(id).update({ completed: !completed });
     }
 
+    // Delete task
     async function deleteTask(id) {
       await db.collection("tasks").doc(id).delete();
     }
 
+    // Render tasks
     function renderTasks() {
       const list = document.getElementById("taskList");
       list.innerHTML = "";
@@ -167,11 +169,11 @@ const firebaseConfig = {
         const completeBtn = document.createElement("button");
         completeBtn.textContent = "✓";
         completeBtn.className = "complete-btn";
-        completeBtn.onclick = () => toggleComplete(task.id, task.completed);
+        completeBtn.addEventListener("click", () => toggleComplete(task.id, task.completed));
 
         const deleteBtn = document.createElement("button");
         deleteBtn.textContent = "✕";
-        deleteBtn.onclick = () => deleteTask(task.id);
+        deleteBtn.addEventListener("click", () => deleteTask(task.id));
 
         actions.appendChild(completeBtn);
         actions.appendChild(deleteBtn);
@@ -182,7 +184,7 @@ const firebaseConfig = {
       });
     }
 
-    // Listen to Firestore in real-time
+    // Real-time Firestore listener
     db.collection("tasks").orderBy("createdAt", "asc").onSnapshot(snapshot => {
       tasks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       renderTasks();
@@ -193,9 +195,15 @@ const firebaseConfig = {
       document.body.classList.toggle("dark");
       localStorage.setItem("darkMode", document.body.classList.contains("dark"));
     }
-    if (localStorage.getItem("darkMode") === "true") document.body.classList.add("dark");
 
-    // Enter key to add task
+    // Restore dark mode preference
+    if (localStorage.getItem("darkMode") === "true") {
+      document.body.classList.add("dark");
+    }
+
+    // Attach event listeners
+    document.getElementById("addTaskBtn").addEventListener("click", addTask);
+    document.getElementById("darkModeBtn").addEventListener("click", toggleDarkMode);
     document.getElementById("taskInput").addEventListener("keypress", e => {
       if (e.key === "Enter") addTask();
     });
