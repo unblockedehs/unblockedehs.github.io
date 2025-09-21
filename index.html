@@ -3,164 +3,202 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NovaTech | AI Productivity Tools</title>
+  <title>Firebase To-Do List</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
     body {
-      background: #f9f9f9;
-      color: #333;
-      line-height: 1.6;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      transition: background 0.3s, color 0.3s;
     }
-
-    header {
-      background: #0e1a35;
-      color: #fff;
-      padding: 20px 40px;
+    body.dark {
+      background: #1e1e1e;
+      color: #ddd;
+    }
+    .container {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 500px;
+      transition: background 0.3s, color 0.3s;
+    }
+    body.dark .container { background: #2c2c2c; color: #ddd; }
+    h2 { text-align: center; margin-bottom: 20px; }
+    input, select, input[type="date"] {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    input[type="text"] { width: 55%; }
+    select, input[type="date"] { width: 20%; }
+    button {
+      padding: 10px 15px;
+      margin-left: 5px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover { opacity: 0.9; }
+    ul { list-style: none; padding: 0; margin-top: 15px; }
+    li {
+      padding: 12px;
+      margin-bottom: 10px;
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 5px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-    }
-
-    header h1 {
-      font-size: 24px;
-      letter-spacing: 1px;
-    }
-
-    nav a {
-      color: #ccc;
-      margin-left: 20px;
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
-
-    nav a:hover {
-      color: #fff;
-    }
-
-    .hero {
-      background: linear-gradient(to right, #1e3c72, #2a5298);
-      color: white;
-      padding: 80px 40px;
-      text-align: center;
-    }
-
-    .hero h2 {
-      font-size: 48px;
-      margin-bottom: 20px;
-    }
-
-    .hero p {
-      font-size: 20px;
-      max-width: 600px;
-      margin: 0 auto 30px;
-    }
-
-    .hero button {
-      padding: 12px 30px;
-      font-size: 16px;
-      border: none;
-      background: #ffcc00;
-      color: #000;
-      cursor: pointer;
-      border-radius: 5px;
-      transition: background 0.3s ease;
-    }
-
-    .hero button:hover {
-      background: #e6b800;
-    }
-
-    .features {
-      display: flex;
       flex-wrap: wrap;
-      justify-content: center;
-      padding: 60px 40px;
-      background: #fff;
+      transition: background 0.2s ease;
     }
-
-    .feature {
-      flex: 1 1 300px;
-      max-width: 300px;
-      margin: 20px;
-      padding: 30px;
-      background: #f0f0f0;
-      border-radius: 10px;
-      text-align: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    body.dark li { background: #3a3a3a; border: 1px solid #555; }
+    li.completed { text-decoration: line-through; background: #e0ffe0; }
+    body.dark li.completed { background: #2f4f2f; }
+    .task-info { flex: 1; }
+    .task-meta { font-size: 12px; color: #666; }
+    body.dark .task-meta { color: #aaa; }
+    .actions button { margin-left: 8px; background: #ff4d4d; }
+    .actions button.complete-btn { background: #008CBA; }
+    .top-controls {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;
     }
-
-    .feature h3 {
-      margin-bottom: 15px;
-      font-size: 22px;
-      color: #0e1a35;
-    }
-
-    .feature p {
-      font-size: 16px;
-      color: #555;
-    }
-
-    footer {
-      text-align: center;
-      padding: 30px 20px;
-      background: #0e1a35;
-      color: #aaa;
-      font-size: 14px;
-    }
-
-    @media (max-width: 768px) {
-      .hero h2 {
-        font-size: 36px;
-      }
-
-      .hero p {
-        font-size: 18px;
-      }
-    }
+    .dark-toggle { background: #555; }
+    body.dark .dark-toggle { background: #ddd; color: #000; }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>NovaTech</h1>
-    <nav>
-      <a href="#">Home</a>
-      <a href="#">Features</a>
-      <a href="#">Pricing</a>
-      <a href="#">Contact</a>
-    </nav>
-  </header>
-
-  <section class="hero">
-    <h2>Boost Your Productivity with AI</h2>
-    <p>NovaTech delivers cutting-edge AI tools that help you work smarter, automate tasks, and stay ahead.</p>
-    <button>Get Started</button>
-  </section>
-
-  <section class="features">
-    <div class="feature">
-      <h3>Smart Task Automation</h3>
-      <p>Automate routine tasks and workflows with our intuitive AI-powered assistant.</p>
+  <div class="container">
+    <div class="top-controls">
+      <h2>📝 Firebase To-Do List</h2>
+      <button class="dark-toggle" onclick="toggleDarkMode()">🌙</button>
     </div>
-    <div class="feature">
-      <h3>Real-time Insights</h3>
-      <p>Get instant data-driven insights to make faster and smarter decisions.</p>
+    <div>
+      <input type="text" id="taskInput" placeholder="Enter a task..." />
+      <select id="category">
+        <option value="General">General</option>
+        <option value="Work">Work</option>
+        <option value="Personal">Personal</option>
+        <option value="Urgent">Urgent</option>
+      </select>
+      <input type="date" id="deadline" />
+      <button onclick="addTask()">Add</button>
     </div>
-    <div class="feature">
-      <h3>Seamless Integration</h3>
-      <p>Connect NovaTech with your favorite tools like Slack, Google Workspace, and more.</p>
-    </div>
-  </section>
+    <ul id="taskList"></ul>
+  </div>
 
-  <footer>
-    &copy; 2025 NovaTech Inc. All rights reserved.
-  </footer>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
+  <script>
+   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCc-vr43NFOuE2R3Jysy-FWCIYCiXok32A",
+  authDomain: "to-do-app-bfbfb.firebaseapp.com",
+  projectId: "to-do-app-bfbfb",
+  storageBucket: "to-do-app-bfbfb.firebasestorage.app",
+  messagingSenderId: "211254739364",
+  appId: "1:211254739364:web:ce216a907a8625bd440131",
+  measurementId: "G-4218SRLN53"
+};
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    let tasks = [];
+
+    async function addTask() {
+      const input = document.getElementById("taskInput");
+      const category = document.getElementById("category").value;
+      const deadline = document.getElementById("deadline").value;
+      const taskText = input.value.trim();
+      if (taskText === "") return;
+
+      await db.collection("tasks").add({
+        text: taskText,
+        category,
+        deadline,
+        completed: false,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      input.value = "";
+      document.getElementById("deadline").value = "";
+    }
+
+    async function toggleComplete(id, completed) {
+      await db.collection("tasks").doc(id).update({ completed: !completed });
+    }
+
+    async function deleteTask(id) {
+      await db.collection("tasks").doc(id).delete();
+    }
+
+    function renderTasks() {
+      const list = document.getElementById("taskList");
+      list.innerHTML = "";
+      tasks.forEach(task => {
+        const li = document.createElement("li");
+        if (task.completed) li.classList.add("completed");
+
+        const taskInfo = document.createElement("div");
+        taskInfo.className = "task-info";
+        taskInfo.innerHTML = `<strong>${task.text}</strong>
+          <div class="task-meta">${task.category} ${task.deadline ? " | Due: " + task.deadline : ""}</div>`;
+
+        const actions = document.createElement("div");
+        actions.className = "actions";
+
+        const completeBtn = document.createElement("button");
+        completeBtn.textContent = "✓";
+        completeBtn.className = "complete-btn";
+        completeBtn.onclick = () => toggleComplete(task.id, task.completed);
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "✕";
+        deleteBtn.onclick = () => deleteTask(task.id);
+
+        actions.appendChild(completeBtn);
+        actions.appendChild(deleteBtn);
+
+        li.appendChild(taskInfo);
+        li.appendChild(actions);
+        list.appendChild(li);
+      });
+    }
+
+    // Listen to Firestore in real-time
+    db.collection("tasks").orderBy("createdAt", "asc").onSnapshot(snapshot => {
+      tasks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      renderTasks();
+    });
+
+    // Dark mode toggle
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark");
+      localStorage.setItem("darkMode", document.body.classList.contains("dark"));
+    }
+    if (localStorage.getItem("darkMode") === "true") document.body.classList.add("dark");
+
+    // Enter key to add task
+    document.getElementById("taskInput").addEventListener("keypress", e => {
+      if (e.key === "Enter") addTask();
+    });
+  </script>
 </body>
 </html>
